@@ -38,4 +38,21 @@ La versión 2 presentó mejor desempeño en casi todas las métricas, sobretodo 
 
 Los modelos recomendadores se incluyen dentro de una API. Esta presenta los siguientes endpoints:
 
--```fdfds``` d
+```get_new_user_recommendation```. Endpoint para generar recomendaciones a un usuario nuevo. Argumentos:
+- ```movieIds [str]```. Las ID de las películas vistas por el nuevo usuario al que se le darán predicciones, separadas por comas.
+- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
+- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
+
+```get_current_user_recommendation```. Endpoint para generar recomendaciones a un usuario existente. Argumentos:
+- ```userId [str]```. La ID del usuario al que se le generarán recomendaciones.
+- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
+- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
+
+```get_new_movie_recommendation```. Endpoint para generar una recomendación en base a los datos de una nueva película. Argumentos:
+- ```year [int]```. El año de estreno de la película. Por defecto: 1992 (promedio del dataset).
+- ```origin [str]```. El origen de la película. Debe ser una de las siguientes opciones ```American```,  ```British```,  ```Canadian```,  ```Australian```,  ```Japanese```,  ```Bollywood```,  ```Hong Kong```,  ```Chinese```,  ```Russian```,   ```South_Korean``` o   ```Other```. Por defecto: American.
+- ```genres [str]```. Los géneros que tiene la película, separados por coma. Puede ser uno o más de uno de los siguientes: ```Action```,  ```Adventure```,  ```Animation```,  ```Children```,  ```Comedy```,  ```Crime```,  ```Documentary```,  ```Drama```,  ```Fantasy```,  ```Film-Noir```,  ```Horror```,  ```IMAX```,  ```Musical```,  ```Mystery```,  ```Romance```,  ```Sci-Fi```,  ```Thriller```,  ```War```,  ```Western``` o ```(no genres listed)```. Por defecto: "(no genres listed)".
+- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
+- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
+
+Tanto ```get_new_user_recommendation``` como ```get_current_user_recommendation``` utilizan máxima verosimilitud para generar recomendaciones, ya que tiene mejores métricas out of sample. ```get_new_movie_recommendation``` por su parte utiliza densidad, ya que es el único método que permite utilizar sólo la información de las películas. 
