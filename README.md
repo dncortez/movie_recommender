@@ -2,6 +2,71 @@
 
 Modelo de recomendación de películas mediante Deep Learning en base a atributos de las películas, su sinopsis e interacciones de usuarios.
 
+### Requerimientos
+
+El uso de los modelos requiere las siguientes dependencias:
+- Python 3.9.13 o mayor
+- Fastapi 0.103.1 o mayor
+- Nltk 3.7 o mayor
+- Numpy 1.21.5 o mayor
+- Pandas 2.0.2 o mayor
+- Scikit-learn 1.2.2 o mayor
+- Torch 2.0.1 o mayor
+- Tqdm 4.64.1 o mayor
+- Uvicorn 0.23.2 o mayor
+
+### Instalación
+
+Para instalar el modelo, usa:
+```
+git clone https://github.com/dncortez/movienet
+```
+
+Esto clonará el repositorio y la mayoría de los pesos de los modelos. Para terminar la instalación se deben descargar 2 modelos adicionales lo cual se puede hacer mediante los siguientes comandos:
+```
+cd movienet/weights
+wget https://drive.google.com/file/d/1llI7jbn31-VpIqFY4xDqam4n4oqX4cMT/view?usp=sharing
+wget https://drive.google.com/file/d/16ON1PxOsl9NkxBPSNjklkAxNhNKgux8u/view?usp=sharing
+tar -xf MovieNet1.rar
+tar -xf MovieNet2.rar
+```
+
+Finalmente, para instalar las dependencias se puede ejecutar
+```
+cd ..
+pip install -r requirements.txt
+```
+
+# Uso de la api
+
+Los modelos recomendadores se incluyen dentro de una API que facilita su manejo. Para inicializarla ejecuta el siguiente comando dentro de la carpeta del repositorio:
+```
+uvicorn main:app --reload
+```
+
+Luego utiliza tu gestor de api favorito para interactuar con los modelos, o genera requests directamente en el navegador en ```http://127.0.0.1:8000``` y agregando el endpoint y argumentos. La API presenta los siguientes endpoints:
+
+```get_new_user_recommendation```. Endpoint para generar recomendaciones a un usuario nuevo. Argumentos:
+- ```movieIds [str]```. Las ID de las películas vistas por el nuevo usuario al que se le darán predicciones, separadas por comas.
+- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
+- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
+
+```get_current_user_recommendation```. Endpoint para generar recomendaciones a un usuario existente. Argumentos:
+- ```userId [str]```. La ID del usuario al que se le generarán recomendaciones.
+- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
+- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
+
+```get_new_movie_recommendation```. Endpoint para generar una recomendación en base a los datos de una nueva película. Argumentos:
+- ```year [int]```. El año de estreno de la película. Por defecto: 1992 (promedio del dataset).
+- ```origin [str]```. El origen de la película. Debe ser una de las siguientes opciones ```American```,  ```British```,  ```Canadian```,  ```Australian```,  ```Japanese```,  ```Bollywood```,  ```Hong Kong```,  ```Chinese```,  ```Russian```,   ```South_Korean``` o   ```Other```. Por defecto: American.
+- ```genres [str]```. Los géneros que tiene la película, separados por coma. Puede ser uno o más de uno de los siguientes: ```Action```,  ```Adventure```,  ```Animation```,  ```Children```,  ```Comedy```,  ```Crime```,  ```Documentary```,  ```Drama```,  ```Fantasy```,  ```Film-Noir```,  ```Horror```,  ```IMAX```,  ```Musical```,  ```Mystery```,  ```Romance```,  ```Sci-Fi```,  ```Thriller```,  ```War```,  ```Western``` o ```(no genres listed)```. Por defecto: "(no genres listed)".
+- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
+- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
+
+Tanto ```get_new_user_recommendation``` como ```get_current_user_recommendation``` utilizan máxima verosimilitud para generar recomendaciones, ya que tiene mejores métricas out of sample. ```get_new_movie_recommendation``` por su parte utiliza densidad, ya que es el único método que permite utilizar sólo la información de las películas. 
+
+# Descripción del modelo
+
 El presente repositorio contiene 2 versiones de modelos de recomendación en base a embeddings. El principio detrás de este tipo de sistemas de recomendación es entrenar embeddings (representaciones vectoriales) que resuman las características de preferencia de los artículos o los usuarios, de manera que artículos (en este caso películas) que los ven los mismos usuarios (o usuarios que ven las mismas películas) tengan embeddings similares.
 
 Cada versión presenta 2 elementos: Los embeddings de películas y los embeddings de usuarios. En el enfoque utilizado primero se entrenaron los embeddings de películas en base a su patrón de usuarios que las ven. Luego, se entrenaron los embeddings de los usuarios de manera tal que con una red neuronal que toma el embedding del usuario y el embedding de la película se obtenga la probabilidad de que el usuario haya visto la película.
@@ -32,27 +97,4 @@ La versión 2 presentó mejor desempeño en casi todas las métricas, sobretodo 
   - Recomendación por M.V.: 31.38% in sample | **18.07% out of sample**
 - Usuarios Nuevos:
   - Recomendación por densidad: 45% in sample | 10.63% out of sample
-  - Recomendación por M.V.: 26.75% in sample | **19.19% out of sample**
-
-# API
-
-Los modelos recomendadores se incluyen dentro de una API. Esta presenta los siguientes endpoints:
-
-```get_new_user_recommendation```. Endpoint para generar recomendaciones a un usuario nuevo. Argumentos:
-- ```movieIds [str]```. Las ID de las películas vistas por el nuevo usuario al que se le darán predicciones, separadas por comas.
-- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
-- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
-
-```get_current_user_recommendation```. Endpoint para generar recomendaciones a un usuario existente. Argumentos:
-- ```userId [str]```. La ID del usuario al que se le generarán recomendaciones.
-- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
-- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
-
-```get_new_movie_recommendation```. Endpoint para generar una recomendación en base a los datos de una nueva película. Argumentos:
-- ```year [int]```. El año de estreno de la película. Por defecto: 1992 (promedio del dataset).
-- ```origin [str]```. El origen de la película. Debe ser una de las siguientes opciones ```American```,  ```British```,  ```Canadian```,  ```Australian```,  ```Japanese```,  ```Bollywood```,  ```Hong Kong```,  ```Chinese```,  ```Russian```,   ```South_Korean``` o   ```Other```. Por defecto: American.
-- ```genres [str]```. Los géneros que tiene la película, separados por coma. Puede ser uno o más de uno de los siguientes: ```Action```,  ```Adventure```,  ```Animation```,  ```Children```,  ```Comedy```,  ```Crime```,  ```Documentary```,  ```Drama```,  ```Fantasy```,  ```Film-Noir```,  ```Horror```,  ```IMAX```,  ```Musical```,  ```Mystery```,  ```Romance```,  ```Sci-Fi```,  ```Thriller```,  ```War```,  ```Western``` o ```(no genres listed)```. Por defecto: "(no genres listed)".
-- ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
-- ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
-
-Tanto ```get_new_user_recommendation``` como ```get_current_user_recommendation``` utilizan máxima verosimilitud para generar recomendaciones, ya que tiene mejores métricas out of sample. ```get_new_movie_recommendation``` por su parte utiliza densidad, ya que es el único método que permite utilizar sólo la información de las películas.  
+  - Recomendación por M.V.: 26.75% in sample | **19.19% out of sample** 
