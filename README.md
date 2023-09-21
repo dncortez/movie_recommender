@@ -1,4 +1,4 @@
-# Movie Recommender
+# MovieNet: Modelo de recomendación de películas
 
 Modelo de recomendación de películas mediante Deep Learning en base a atributos de las películas, su sinopsis e interacciones de usuarios.
 
