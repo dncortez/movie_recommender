@@ -55,4 +55,4 @@ Los modelos recomendadores se incluyen dentro de una API. Esta presenta los sigu
 - ```model [int]```. La versión del modelo de recomendación a utilizar. Por defecto: 2
 - ```n [int]```. El número de recomendaciones a entregar. Por defecto: 8.
 
-Tanto ```get_new_user_recommendation``` como ```get_current_user_recommendation``` utilizan máxima verosimilitud para generar recomendaciones, ya que tiene mejores métricas out of sample. ```get_new_movie_recommendation``` por su parte utiliza densidad, ya que es el único método que permite utilizar sólo la información de las películas. 
+Tanto ```get_new_user_recommendation``` como ```get_current_user_recommendation``` utilizan máxima verosimilitud para generar recomendaciones, ya que tiene mejores métricas out of sample. ```get_new_movie_recommendation``` por su parte utiliza densidad, ya que es el único método que permite utilizar sólo la información de las películas.  
