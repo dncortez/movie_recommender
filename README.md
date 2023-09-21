@@ -13,7 +13,7 @@ En estos modelos, a diferencia de otros donde simplemente se asocia un embedding
 Con cada modelo existen 2 métodos de recomendar películas en base a un usuario o las películas vistas por el usuario:
 
 - Método por densidad (Bruto): Consiste en simplemente buscar las películas con mayor similitud a alguna de las películas vistas por el usuario. Esto se hace mediante similitud coseno de los embeddings de las películas con los de cada película del usuario. Se asume una distribución normal sobre cada similitud coseno y se suman las densidades.
-- $\sqrt{3x-1}+(1+x)^2$
+- $sum_{UserMovies} e^{-\frac{cos(E_{candidate},E_{user})}{s\sigma^2}}$
 
 ## Métricas
 
