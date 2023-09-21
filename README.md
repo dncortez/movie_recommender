@@ -15,7 +15,7 @@ Con cada modelo existen 2 métodos de recomendar películas en base a un usuario
 - Método por densidad (Bruto): Consiste en simplemente buscar las películas con mayor similitud a alguna de las películas vistas por el usuario. Esto se hace mediante similitud coseno de los embeddings de las películas con los de cada película del usuario. Se asume una distribución normal sobre cada similitud coseno y se suman las densidades.
 $$\Large \sum_{E_u\in\ User} e^{-\frac{cos(E_{c},E_{u})^2}{s\sigma^2}}$$
 Donde $E_c$ es el embedding de la película candidata y $E_u$ es el embedding de una película del usuario. Este método es "Bruto", ya que se podrían tener métricas virtualmente perfectas (obtener como recomendación las mismas películas que el usuario ya ha visto) con $\sigma$ suficientemente bajos, pero arroja malas métricas para predicciones out of sample. Este método sólo requiere de embeddings de películas.
-- Máxima verosimilitud: Corresponde en calcular la probabilidad de que un usuario haya visto una película en base a el embedding de la película, el embedding de un usuario y una red neuronal. Se realiza esto para todas las películas y se ordenan de mayor a menor probabilidad. Si la red generaliza lo suficientemente bien, se pueden tener buenas predicciones de lo que al usuario le gustaría ver en base a lo que ya ha visto (out of sample).
+- Máxima verosimilitud (M.V.): Corresponde en calcular la probabilidad de que un usuario haya visto una película en base a el embedding de la película, el embedding de un usuario y una red neuronal. Se realiza esto para todas las películas y se ordenan de mayor a menor probabilidad. Si la red generaliza lo suficientemente bien, se pueden tener buenas predicciones de lo que al usuario le gustaría ver en base a lo que ya ha visto (out of sample).
 
 ### Métricas
 
@@ -25,14 +25,17 @@ Se utilizaron 2 métricas para evaluar el desempeño de los modelos de predicci�
 
 ### Resultados
 
-La versión 2 presentó mejor desempeño en casi todas las métricas, sobretodo en métricas out of sample, de manera tal que sus recomendaciones podrían ser más útiles.
+La versión 2 presentó mejor desempeño en casi todas las métricas, sobretodo en métricas out of sample, de manera tal que sus recomendaciones podrían ser más útiles. A continuación se detallan los porcentajes de Precision @ 10 tanto in sample como out of sample.
 
 - Usuarios Existentes:
-  - fdksflkjd
-  - fdkjsfkjds 
+  - Recomendación por densidad: 45.51% in sample | 7.72% out of sample
+  - Recomendación por M.V.: 31.38% in sample | **18.07% out of sample**
+- Usuarios Nuevos:
+  - Recomendación por densidad: 45% in sample | 10.63% out of sample
+  - Recomendación por M.V.: 26.75% in sample | **19.19% out of sample**
 
 # API
 
+Los modelos recomendadores se incluyen dentro de una API. Esta presenta los siguientes endpoints:
 
-
-##
+-```fdfds```
