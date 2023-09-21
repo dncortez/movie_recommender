@@ -20,3 +20,4 @@ Donde $E_c$ es el embedding de la película candidata y $E_u$ es el embedding de
 ## Métricas
 
 Se utilizaron 2 métricas para 
+d
