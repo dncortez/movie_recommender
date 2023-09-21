@@ -63,11 +63,11 @@ recommender2 = Recommender(movienet2, usernet2, interactions, full_dataset, barc
 
 
 @app.get("/get_new_movie_recommendation")
-def get_new_movie_recommendation(model:int = 2, year: int = 1992, origin:str = "American", genres: str = "", plot: str = ".", n:int = 8):
+def get_new_movie_recommendation(model:int = 2, year: int = 1992, origin:str = "American", genres: str = "(no genres listed)", plot: str = ".", n:int = 8):
     recommender_system = recommender1 if model==1 else recommender2
-    
-    if type(genres) is list:
-        genres = "|".join(genres)
+
+    genres = "|".join(genres.split(","))
+
     df = pd.DataFrame({"Release Year": [year], "Origin/Ethnicity": [origin], "genres": [genres]})
     features = ct.transform(df)
     text, length = tt(plot)
